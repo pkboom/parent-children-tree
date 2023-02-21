@@ -1,5 +1,38 @@
 # Materialized Path Technique
 
+```sql
+CREATE TABLE food (
+    id bigint,
+    path varchar(255),
+    is_group BOOLEAN
+);
+
+INSERT INTO food (path, is_group) VALUES ('Food', true);
+INSERT INTO food (path, is_group) VALUES ('Food.Fruit', true);
+INSERT INTO food (path, is_group) VALUES ('Food.Fruit.Banana', false);
+INSERT INTO food (path, is_group) VALUES ('Food.Meat', true);
+INSERT INTO food (path, is_group) VALUES ('Food.Meat.Beaf', false);
+INSERT INTO food (path, is_group) VALUES ('Food.Meat.Pork', false);
+
+-- All children (Food.Fruit.Banana, Food.Fruit.Cherry):
+SELECT * FROM food WHERE path like 'Food.Fruit.%';
+
+-- All parents (Food, Food.Fruit):
+SELECT * FROM food WHERE path IN('Food', 'Food.Fruit');
+
+-- Count all food in meat
+select count(*) from food where path like 'Food.Meat%' and is_group = false
+```
+
+## Add parent_id
+
+-   Add a referential integrity column (e.g., parent_id).
+-   Have a trigger upon inserts, which automatically creates your path with the parent path and the current record
+-   Do not allow for nodes to exist without parent references.
+-   To achieve this, make sure not to allow updates to the path column.
+-   Always make sure it is created automatically on inserts.
+
+https://sqlfordevs.com/tree-as-materialized-path
 https://dzone.com/articles/materialized-paths-tree-structures-relational-database
 
 # Adjacency List Model
@@ -12,8 +45,8 @@ WITH RECURSIVE tree AS (
   UNION
     SELECT employees.id, employees.name, tree.level + 1, JSON_ARRAY_APPEND(tree.path, '$', employees.id)
     FROM tree
-    JOIN employees ON(tree.id = employees.manager_id)
-    WHERE NOT employees.id MEMBER OF(tree.p) -- cycle detection
+    JOIN employees ON tree.id = employees.manager_id
+    WHERE NOT employees.id MEMBER OF tree.p -- cycle detection
 )
 SELECT * FROM tree
 ```
