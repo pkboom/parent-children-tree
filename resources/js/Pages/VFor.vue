@@ -1,18 +1,12 @@
 <script setup>
-import { onMounted, ref } from "vue";
-
 const props = defineProps({
     parents: Array,
     comments: Array,
 });
 
-const subComments = ref(null);
-
-onMounted(() => {
-    subComments.value = props.comments.filter(
-        (item) => item.parent_id == props.parents[0].id
-    );
-});
+const subComments = props.comments.filter(
+    (item) => item.parent_id == props.parents[0].id
+);
 </script>
 
 <template>

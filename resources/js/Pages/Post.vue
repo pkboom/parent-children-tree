@@ -1,17 +1,12 @@
 <script setup>
 import VFor from "./VFor.vue";
-import { ref } from "vue";
 
 const props = defineProps({
     post: Object,
     comments: Array,
 });
 
-const parents = ref(props.comments.filter((item) => !item.parent_id));
-
-const indent = (path) => {
-    return path.split(".").length;
-};
+const parents = props.comments.filter((item) => !item.parent_id);
 </script>
 
 <template>
@@ -24,8 +19,8 @@ const indent = (path) => {
             v-slot="{ comment }"
         >
             <div :style="`margin-left: ${comment.depth}em`">
-                {{ comment.body }}
                 {{ comment.path }}
+                {{ comment.body }}
             </div>
         </VFor>
     </div>
