@@ -4,7 +4,7 @@ const props = defineProps({
     comments: Array,
 });
 
-const subComments = props.comments.filter(
+const children = props.comments.filter(
     (item) => item.parent_id == props.parents[0].id
 );
 </script>
@@ -15,8 +15,8 @@ const subComments = props.comments.filter(
             {{ parents[0] }}
         </slot>
         <VFor
-            v-if="subComments && subComments.length > 0"
-            :parents="subComments"
+            v-if="children && children.length > 0"
+            :parents="children"
             :comments="comments"
             v-slot="{ comment }"
         >
