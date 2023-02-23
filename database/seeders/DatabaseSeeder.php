@@ -16,13 +16,37 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Post::factory()
-            ->has(Comment::factory()->count(3))
+            ->has(Comment::factory()->count(2))
             ->create();
 
         Comment::factory()
-            ->count(3)
+            ->count(2)
             ->create([
                 'parent_id' => 1
+            ]);
+
+        Comment::factory()
+            ->count(2)
+            ->create([
+                'post_id' => 1
+            ]);
+
+        Comment::factory()
+            ->count(2)
+            ->create([
+                'parent_id' => 1
+            ]);
+
+        Comment::factory()
+            ->count(2)
+            ->create([
+                'parent_id' => 3
+            ]);
+
+        Comment::factory()
+            ->count(2)
+            ->create([
+                'parent_id' => 5
             ]);
     }
 }
